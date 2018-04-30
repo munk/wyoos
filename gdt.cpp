@@ -1,5 +1,7 @@
 #include "gdt.h"
 
+void printf(const char* str);
+
 GlobalDescriptorTable::GlobalDescriptorTable()
   : nullSegmentSelector(0,0,0),
     unusedSegmentSelector(0,0,0),

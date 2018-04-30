@@ -11,13 +11,15 @@ void InterruptManager::SetInterruptDescriptorTableEntry(
         uint8_t DescriptorPrivilegeLevel,
         uint8_t descriptorType)
 {
+  printf("\nGDT Entry Start\n");
   interruptDescriptorTable[interruptNumber].handlerAddressLowBits = ((uint32_t)handler) & 0xFFFF;
   interruptDescriptorTable[interruptNumber].handlerAddressHighBits = (((uint32_t)handler) >> 16) & 0xFFFF;
   interruptDescriptorTable[interruptNumber].gdt_codeSegmentSelector = codeSegmentSelectorOffset;
 
-  const uint8_t IDT_DESC_PRESENT = 0x00;
+  const uint8_t IDT_DESC_PRESENT = 0x80;
   interruptDescriptorTable[interruptNumber].access_rights = IDT_DESC_PRESENT | descriptorType | (DescriptorPrivilegeLevel << 5);
   interruptDescriptorTable[interruptNumber].reserved = 0;
+  printf("\nGDT Entry End\n");
 }
 
 InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
@@ -57,15 +59,15 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
 }
 
 void InterruptManager::InterruptIgnore() {
-  
+
 }
 
 void InterruptManager::HandleInterruptRequest0x01() {
-  
+ printf("Handle 0x01"); 
 }
 
 void InterruptManager::HandleInterruptRequest0x00() {
-  
+ printf("Handle 0x00"); 
 }
 
 InterruptManager::~InterruptManager()
@@ -75,12 +77,21 @@ InterruptManager::~InterruptManager()
 
 void InterruptManager::Activate()
 {
+  printf("\nStart activate\n");
   asm("sti");
+  printf("Done activate\n");
 }
 
-uint32_t InterruptManager::HandleInterrupt(uint8_t interruptNumber, uint32_t esp)
+uint32_t InterruptManager::HandleInterrupt(uint8_t interrupt, uint32_t esp)
 {
-  const char* debugString = " INTERRUPT";
-  printf(debugString);
+  printf("start handle interrupt");
+  //const char* debugString = " INTERRUPT";
+  char* foo = "INTERRUPT 0x00";
+  char* hex = "0123456789ABCDEF";
+
+  foo[12] = hex[(interrupt >> 4) & 0xF];
+  foo[13] = hex[interrupt & 0xF];
+  printf(foo);
+
   return esp;
 }

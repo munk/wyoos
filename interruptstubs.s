@@ -1,25 +1,25 @@
-  .set IRQ_BASE, 0x20
+.set IRQ_BASE, 0x20
 
-  .section .text
-  .extern _ZN16InterruptManager15HandleInterruptEhj
-  .global 	_ZN16IterruptManager26IgnoreInterruptRequestEv
+.section .text
+.extern _ZN16InterruptManager15HandleInterruptEhj
+.global _ZN16IterruptManager26IgnoreInterruptRequestEv
 
-	.macro HandleException num
-	.global	_ZN16InterruptManager16HandleException\num\()Ev
+.macro HandleException num
+.global	_ZN16InterruptManager16HandleException\num\()Ev
 _ZN16InterruptManager16handleException\num\()Ev:
-	    movb $\num, (interruptnumber)
-	    jmp int_bottom
-	.endm
+    movb $\num, (interruptnumber)
+    jmp int_bottom
+.endm
 
-  .macro HandleInterruptRequest num
-	.global 	_ZN16InterruptManager26HandleInterruptRequest\num\()Ev
+.macro HandleInterruptRequest num
+.global _ZN16InterruptManager26HandleInterruptRequest\num\()Ev
 _ZN16InterruptManager26handleInterruptRequest\num\()Ev:
     movb $\num + IRQ_BASE, (interruptnumber)
     jmp int_bottom
-  .endm 
+.endm 
 
-	HandleInterruptRequest 0x00
-	HandleInterruptRequest 0x01
+HandleInterruptRequest 0x00
+HandleInterruptRequest 0x01
 
 int_bottom:
 
@@ -42,8 +42,7 @@ int_bottom:
   popa
 
 _ZN16IterruptManager26IgnoreInterruptRequestEv:
-	iret
-
+  iret
 
   .data
 interruptnumber:   .byte 0
